@@ -22,11 +22,11 @@ if sys.version_info[0] == 2:
     SUBLIMEREPL_USER_DIR = os.path.join(sublime.packages_path(), "User", "SublimeREPL")
     PY2 = True
 
-# yes, CommandCommmand :) 
+# yes, CommandCommmand :)
 class RunExistingWindowCommandCommand(sublime_plugin.WindowCommand):
     def run(self, id, file):
-        """Find and run existing command with id in specified file. 
-        SUBLIMEREPL_USER_DIR is consulted first, and then SUBLIMEREPL_DIR""" 
+        """Find and run existing command with id in specified file.
+        SUBLIMEREPL_USER_DIR is consulted first, and then SUBLIMEREPL_DIR"""
         for prefix in (SUBLIMEREPL_USER_DIR, SUBLIMEREPL_DIR):
             path = os.path.join(prefix, file)
             json_cmd = self._find_cmd(id, path)
@@ -35,11 +35,21 @@ class RunExistingWindowCommandCommand(sublime_plugin.WindowCommand):
         if not json_cmd:
             return
         args = json_cmd["args"] if "args" in json_cmd else None
+        # user setting.
+        # C++ - Run in Command: replace "${file_base_name}" to the real file base name in Windows.
+        if None != args and "cmd" in args and "windows" in args["cmd"]:
+            import re
+            pattern = re.compile(r"[^\\]+$", re.UNICODE)
+            strFileName = pattern.search(self.window.active_view().file_name()).group(0)
+            pattern = re.compile(r"\.[^\.]+$", re.UNICODE)
+            strFileBaseName = pattern.sub("", strFileName)
+            for i, strArgs in enumerate(args["cmd"]["windows"]):
+                args["cmd"]["windows"][i] = strArgs.replace("${file_base_name}", strFileBaseName)
         self.window.run_command(json_cmd["command"], args)
-    
+
     def _find_cmd(self, id, file):
         return self._find_cmd_in_file(id, file)
-                
+
     def _find_cmd_in_file(self, id, file):
         try:
             if PY2 or os.path.isfile(file):

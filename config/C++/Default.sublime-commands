@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "SublimeREPL: C++ - Run in Command",
+        "command": "run_existing_window_command", "args":
+        {
+            "id": "repl_cpp_run",
+            "file": "config/C++/Main.sublime-menu"
+        }
+    }
+]

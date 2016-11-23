@@ -1,0 +1,44 @@
+[
+     {
+        "id": "tools",
+        "children":
+        [{
+            "caption": "SublimeREPL",
+            "mnemonic": "R",
+            "id": "SublimeREPL",
+            "children":
+            [
+                {"command": "repl_open",
+                 "caption": "C++ - Single File Run in Command",
+                 "id": "repl_cpp_run",
+                 "args": {
+                    "type": "subprocess",
+                    "encoding": {"windows": "$win_cmd_encoding",
+                                 "linux": "utf-8",
+                                 "osx": "utf-8"},
+                    "cmd": {"windows": [
+                                "cmd.exe", "/c",
+                                "g++", "${file}", "-o", "${file_path}/${file_base_name}.exe", "&&",
+                                "${file_path}/${file_base_name}.exe"
+                            ],
+                            "linux": [
+                                "bash", "-i",
+                                "g++", "${file}", "-o", "${file_path}/${file_base_name}", "&&",
+                                "${file_path}/${file_base_name}"
+                            ],
+                            "osx": [
+                                "bash", "-i",
+                                "g++", "${file}", "-o", "${file_path}/${file_base_name}", "&&",
+                                "${file_path}/${file_base_name}"
+                            ]},
+                    "cwd": "$file_path",
+                    "cmd_postfix": "\n",
+                    "env": {},
+                    "external_id": "cpp",
+                    "syntax": "Packages/Text/Plain text.tmLanguage"
+                    }
+                }
+            ]
+        }]
+    }
+]
